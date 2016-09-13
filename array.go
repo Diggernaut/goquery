@@ -31,7 +31,7 @@ func (s *Selection) Eq(index int) *Selection {
 		return newEmptySelection(s.document)
 	}
 
-	return s.Slice(index, index+1)
+	return s.Slice(index, index)
 }
 
 // Slice reduces the set of matched elements to a subset specified by a range
@@ -39,11 +39,23 @@ func (s *Selection) Eq(index int) *Selection {
 func (s *Selection) Slice(start, end int) *Selection {
 	if start < 0 {
 		start += len(s.Nodes)
+		if start < 0 {
+			start = 0
+		}
 	}
 	if end < 0 {
 		end += len(s.Nodes)
+		if end < 0 {
+			end = 0
+		}
 	}
-	return pushStack(s, s.Nodes[start:end])
+	if end > len(s.Nodes)-1 {
+		end = len(s.Nodes)-1
+	}
+	if start > len(s.Nodes)-1 {
+		return newEmptySelection(s.document)
+	}
+ 	return pushStack(s, s.Nodes[start:end+1])
 }
 
 // Get retrieves the underlying node at the specified index.
