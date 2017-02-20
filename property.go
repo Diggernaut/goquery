@@ -259,7 +259,10 @@ func getClassesSlice(classes string) []string {
 
 func removeAttr(n *html.Node, attrName string) {
 	for i, a := range n.Attr {
-		if a.Key == attrName {
+		if attrName == "*" {
+			n.Attr[i], n.Attr[len(n.Attr)-1], n.Attr =
+				n.Attr[len(n.Attr)-1], html.Attribute{}, n.Attr[:len(n.Attr)-1]
+		} else if a.Key == attrName {
 			n.Attr[i], n.Attr[len(n.Attr)-1], n.Attr =
 				n.Attr[len(n.Attr)-1], html.Attribute{}, n.Attr[:len(n.Attr)-1]
 			return
